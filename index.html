@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question gamee 💭✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        burgundy: '#881337',
+                        burgundyDark: '#4c0519',
+                        softPink: '#ffe4e6',
+                        roseAccent: '#f43f5e',
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        amiri: ['Amiri', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #fff5f6 0%, #ffe4e6 50%, #fecdd3 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 50px rgba(136, 19, 55, 0.08),
+                        0 2px 10px rgba(255, 255, 255, 0.5) inset;
+        }
+
+        .pulse-btn {
+            animation: pulse-ring 2s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(136, 19, 55, 0.4); }
+            70% { box-shadow: 0 0 0 14px rgba(136, 19, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(136, 19, 55, 0); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 relative">
+
+    <main class="w-full max-w-lg z-10 my-auto">
+
+        <!-- 1. WELCOME SCREEN -->
+        <div id="welcomeScreen" class="glass-card rounded-3xl p-8 text-center fade-in-up">
+            <div class="w-20 h-20 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-6 text-burgundy shadow-inner border border-rose-200">
+                <i class="fa-solid fa-pen-nib text-3xl"></i>
+            </div>
+            
+            <h1 class="text-2xl md:text-3xl font-extrabold text-burgundy mb-3">سؤال و جواب خفيف 💭</h1>
+            <p class="text-gray-600 text-sm md:text-base mb-8 leading-relaxed font-light">
+                مساحة لطيفة كده.. اكتبي اللي في بالك عني بصراحة وبراحتك خالص! ✨
+            </p>
+
+            <button id="startBtn" class="pulse-btn relative inline-flex items-center justify-center px-8 py-3.5 text-base font-bold text-white bg-gradient-to-r from-burgundy to-burgundyDark rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 gap-2">
+                <span>ابدأ الأسئلة</span>
+                <i class="fa-solid fa-arrow-left text-xs"></i>
+            </button>
+        </div>
+
+        <!-- 2. QUESTIONS SCREEN -->
+        <div id="quizScreen" class="glass-card rounded-3xl p-6 md:p-8 hidden">
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-rose-100">
+                <span class="text-xs font-bold text-burgundy bg-rose-100 px-3 py-1.5 rounded-full" id="questionTracker">
+                    السؤال 1 من 3
+                </span>
+                <div class="w-1/2 bg-gray-200 h-2.5 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-gradient-to-r from-rose-400 to-burgundy h-full w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 id="questionText" class="text-lg md:text-xl font-bold text-gray-800 leading-snug mb-4 min-h-[50px] flex items-center">
+                    <!-- Question text injected here -->
+                </h2>
+                
+                <textarea id="userAnswer" rows="4" class="w-full p-4 rounded-2xl border border-rose-200 bg-white/90 focus:outline-none focus:ring-2 focus:ring-burgundy text-gray-700 text-sm md:text-base resize-none shadow-inner" placeholder="اكتبي إجابتك هنا براحتك..."></textarea>
+                <p id="errorMsg" class="text-rose-600 text-xs mt-2 hidden">من فضلك اكتبي أي حاجة قبل ما ننتقل للي بعده ✨</p>
+            </div>
+
+            <button id="nextQuestionBtn" class="w-full py-3.5 bg-burgundy text-white font-bold rounded-2xl shadow-md hover:bg-burgundyDark transition-all flex items-center justify-center gap-2">
+                <span id="nextBtnText">السؤال اللي بعده</span>
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+        </div>
+
+        <!-- 3. THANK YOU SCREEN -->
+        <div id="thankYouScreen" class="glass-card rounded-3xl p-8 text-center hidden">
+            <div class="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6 text-emerald-600 shadow-md border border-emerald-200">
+                <i class="fa-solid fa-check text-3xl"></i>
+            </div>
+            
+            <h2 class="text-2xl font-extrabold text-burgundy mb-3">متشكر جداً لكي! ✨</h2>
+            <p class="text-gray-700 font-amiri text-lg leading-relaxed mb-6">
+                تم حفظ إجاباتك بسلام.. نورتي الصفحة بجد!
+            </p>
+        </div>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // 🔑 إعدادات بوت التليجرام (حط بياناتك هنا)
+        // ==========================================
+        const BOT_TOKEN = '8988478570:AAGBOGuAFjQP_-zKfrVrIPQfjhadGulakqk';
+        const CHAT_ID = '7921860883';
+
+        // قائمة الأسئلة (من نوع إيه أكتر حاجة...)
+        const questions = [
+            "ايه ال first impression اللي اتكونت عني لما اتلكمتي معايا لأول مرة؟",
+            "?what's your love language",
+            "?what's your favorite thing to do",
+            "ايه سر حلاوتك😝؟",
+            "دا مش سؤال عايز بس اقولك اني مبسوط اوي ان حد زيك دخل حياتي و بكتب الكلام دا هنا عشان مبعرفش اقوله شات😄💗"
+        ];
+
+        let currentIndex = 0;
+        let answers = [];
+
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const thankYouScreen = document.getElementById('thankYouScreen');
+        
+        const startBtn = document.getElementById('startBtn');
+        const questionTracker = document.getElementById('questionTracker');
+        const progressBar = document.getElementById('progressBar');
+        const questionText = document.getElementById('questionText');
+        const userAnswer = document.getElementById('userAnswer');
+        const errorMsg = document.getElementById('errorMsg');
+        const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+        const nextBtnText = document.getElementById('nextBtnText');
+
+        startBtn.addEventListener('click', () => {
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            quizScreen.classList.add('fade-in-up');
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            userAnswer.value = '';
+            errorMsg.classList.add('hidden');
+            
+            questionTracker.textContent = `السؤال ${currentIndex + 1} من ${questions.length}`;
+            progressBar.style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+            questionText.textContent = questions[currentIndex];
+
+            if (currentIndex === questions.length - 1) {
+                nextBtnText.textContent = 'تأكيد وإرسال';
+            } else {
+                nextBtnText.textContent = 'السؤال اللي بعده';
+            }
+        }
+
+        nextQuestionBtn.addEventListener('click', () => {
+            const val = userAnswer.value.trim();
+            if (!val) {
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            answers.push({
+                question: questions[currentIndex],
+                answer: val
+            });
+
+            currentIndex++;
+
+            if (currentIndex < questions.length) {
+                loadQuestion();
+            } else {
+                sendAnswersToTelegram();
+                quizScreen.classList.add('hidden');
+                thankYouScreen.classList.remove('hidden');
+                thankYouScreen.classList.add('fade-in-up');
+            }
+        });
+
+        function sendAnswersToTelegram() {
+            let message = "📩 إجابات جديدة وصلت من الموقع:\n\n";
+            answers.forEach((item, index) => {
+                message += `🔹 *السؤال ${index + 1}:* ${item.question}\n💬 *الإجابة:* ${item.answer}\n\n`;
+            });
+
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(err => console.log('Error:', err));
+        }
+    </script>
+</body>
+</html>
